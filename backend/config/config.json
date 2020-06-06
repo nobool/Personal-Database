@@ -1,0 +1,12 @@
+{
+    "development": {
+        "host": "localhost",
+        "dialect": "sqlite"
+    },
+    "test": {
+        "host": "localhost"
+    },
+    "production": {
+        "dialect": "postgres"
+    }
+}

@@ -1,0 +1,43 @@
+.banner {
+    height: 100vh;
+    width: 100%;
+    background-image: url("../../images/mountain.jpg");
+    background-position: center;
+    background-size: cover;
+}
+
+.color-filter {
+    width: inherit;
+    height: inherit;
+    background-color: #039aff;
+    opacity: 80%;
+}
+
+.banner-description {
+    height: 92vh;
+    width: inherit;
+    display: flex;
+    align-items: center;
+}
+
+.main-description-p,
+.main-description-header {
+    color: white;
+}
+
+.main-description {
+    text-align: center;
+    h1 {
+        padding: 2rem;
+    }
+}
+
+.main-description-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    p {
+        max-width: 50vw;
+    }
+}

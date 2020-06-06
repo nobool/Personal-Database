@@ -1,70 +1,28 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Typography from '@material-ui/core/Typography';
-import Signup from './Signup';
-import Login from './Login';
+import React, {Component} from 'react'
+import './App.scss'
+import './Containers/navigation.scss'
+import {BrowserRouter as Router, Route} from 'react-router-dom'
+import Index from './Components/Index/Index'
+import Home from './Components/Home/Home'
+import Signup from './Components/Signup/Signup'
+import Login from './Components/Login/Login'
 
-function TabContainer(props) {
-  return (
-    <Typography component="div" style={{ padding: 8 * 3 }}>
-      {props.children}
-    </Typography>
-  );
-}
+/*
+Index: the landing page
+Home: the user's dashboard
+*/
 
-TabContainer.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper,
-  },
-});
-
-class App extends React.Component {
-  state = {
-    value: 0,
-  };
-
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
-
+class App extends Component {
   render() {
-    const { classes } = this.props;
-    const { value } = this.state;
-
     return (
-      <div className={classes.root}>
-        <AppBar position="static">
-          <Tabs value={value} onChange={this.handleChange}>
-            <Tab label="login" />
-            <Tab label="signup" />
-          </Tabs>
-        </AppBar>
-
-        {value === 0 &&
-        <TabContainer>
-          <Login />
-        </TabContainer>}
-
-        {value === 1 &&
-        <TabContainer>
-          <Signup />
-        </TabContainer>}
-      </div>
-    );
+      <Router>
+        <Route exact path="/" component={Index} />
+        <Route path="/home" component={Home} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/login" component={Login} />
+      </Router>
+    )
   }
 }
 
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(App);
+export default App
