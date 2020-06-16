@@ -10,7 +10,7 @@ class Login extends Component {
             <div className="login-page">
                 <div className="login-box">
                     <h1 class="login-title">Login</h1>
-                    <form action="http://localhost:3306/login" method="POST">
+                    <form action="/login" method="POST">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Email address</label>
                             <input type="text" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>

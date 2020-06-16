@@ -1,8 +1,9 @@
 const Sequelize = require('sequelize')
+const bcrypt = require('bcrypt')
 const db = require('../database/db')
 
 // create a new table
-var Users = db.sequelize.define('Users',
+var User = db.sequelize.define('User',
     {
         id: {
             type: Sequelize.INTEGER,
@@ -20,10 +21,14 @@ var Users = db.sequelize.define('Users',
     }
 )
 
-module.exports = Users
+User.prototype.validPassword = (password) => {
+    return bcrypt.compare(password, this.password);
+}
+
+module.exports = User
 
 // force: true will drop the table if it already exists
-Users.sync({force: false}).then(function () {
+User.sync({force: false}).then(function () {
     console.log("Users table database created")
     /*
     return Users.create({
