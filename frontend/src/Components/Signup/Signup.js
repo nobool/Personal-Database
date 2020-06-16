@@ -10,7 +10,7 @@ class Signup extends Component {
             <div className="signup-page">
                 <div className="signup-box">
                     <h1 class="signup-title">Signup</h1>
-                    <form action="http://localhost:3306/signup" method="POST">
+                    <form action="/signup" method="POST">
                         <div class="form-group">
                             <label for="exampleInputEmail1">Email address</label>
                             <input type="text" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
@@ -28,26 +28,3 @@ class Signup extends Component {
 }
 
 export default Signup
-
-/*
-<div className="signup-page">
-                <div className="signup-box">
-                    <Form>
-                    <h1 className="signup-title">Signup</h1>
-                    <Form.Group controlId="formBasicEmail">
-                      <Form.Label>Email address</Form.Label>
-                      <Form.Control type="email" placeholder="Enter email" />
-                    </Form.Group>
-
-                    <Form.Group controlId="formBasicPassword">
-                      <Form.Label>Password</Form.Label>
-                      <Form.Control type="password" placeholder="Password" />
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                      Submit
-                    </Button>
-                    </Form>
-                </div>
-            </div>
-            */
