@@ -20,7 +20,8 @@ router.post('/signup', (req, res) => {
 
     if(user.validateEmail(user.email) && user.validatePassword(req.body.password)) {
         user.save()
-        req.flash('registration successful')
+        console.log('registration successful')
+        //req.flash('registration successful')
         res.redirect('/login')
     }
     else {

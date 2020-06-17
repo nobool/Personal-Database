@@ -37,7 +37,7 @@ User.prototype.hashPassword = function(plainTextPassword) {
 }
 
 // force: true will drop the table if it already exists
-User.sync({ force: false }).then(function () {
+User.sync({ force: true }).then(function () {
     console.log('Users table database created')
 })
 
