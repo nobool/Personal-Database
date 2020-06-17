@@ -2,15 +2,19 @@ var passport = require('passport')
 var LocalStrategy = require('passport-local')
 var User = require('../models/User')
 
-passport.serializeUser((user, done) => {
-    console.log('serializing user', user.id)
-    done(null, user.id)
+
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
 })
 
-passport.deserializeUser((id, done) => {
-    User.findById(id).then((user) => {
+passport.deserializeUser(function(id, done) {
+    User.findByPk(id)
+    .then((user) => {
         done(null, user)
-    }).catch(done)
+    })
+    .catch((err) => {
+        console.log('error:', err)
+    })
 })
 
 passport.use(new LocalStrategy({
@@ -24,7 +28,7 @@ passport.use(new LocalStrategy({
             if(!user) {
                 return done(null, false, { message: 'incorrect email' })
             }
-            if(!user.validPassword(password)) {
+            if(!user.correctPassword(password)) {
                 return done(null, false, { message: 'incorrect password' })
             }
             return done(null, user)
