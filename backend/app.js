@@ -9,10 +9,11 @@ var port = 3001
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }));
 
-app.use(express.static("public"));
-app.use(session({ secret: "cats" }));
-app.use(passport.initialize());
-app.use(passport.session());
+app.use(express.static("public"))
+app.use(session({ secret: "cats" }))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(require('flash')())
 
 app.use('/', usersRouter)
 
