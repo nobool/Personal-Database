@@ -2,4 +2,16 @@
     position: absolute;
     left: 0;
     top: 0;
+
+    .box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .name-input {
+            width: 8rem;
+            text-align: center;
+            outline: none;
+        }
+    }
 }
