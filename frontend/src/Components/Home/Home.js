@@ -1,31 +1,23 @@
 import React, {Component} from 'react'
 import Graph from './Graph'
+import Node from './Node'
 import './Home.scss'
 
 class Home extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            nodes: [
-                {
-                    name: "Me"
-                },
-                {
-                    name: "Jeff"
-                },
-                {
-                    name: "Person1"
-                }
-            ]
-        }
+    handleDrag = () => {
+
+    }
+    onDragEnd = () => {
+
     }
     render() {
         return (
             <div className="home">
-                <Graph nodes={this.state.nodes} />
+                <Graph />
             </div>
         )
     }
 }
+
 
 export default Home

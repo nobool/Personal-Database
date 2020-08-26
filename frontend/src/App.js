@@ -6,6 +6,7 @@ import Index from './Components/Index/Index'
 import Home from './Components/Home/Home'
 import Signup from './Components/Signup/Signup'
 import Login from './Components/Login/Login'
+import Temp from './Components/Home/Temp'
 
 /*
 Index: the landing page
@@ -20,6 +21,7 @@ class App extends Component {
         <Route path="/home" component={Home} />
         <Route path="/signup" component={Signup} />
         <Route path="/login" component={Login} />
+        <Route path="/draggable" component={Temp} />
       </Router>
     )
   }

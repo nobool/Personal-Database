@@ -1,19 +1,5 @@
-.center {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.graph {
-    height: 80vh;
-    width: 80vw;
-    background-color: #f0f0f0;
-}
-
-.node {
-    margin: 5rem;
-    height: 10rem;
-    width: 10rem;
-    background-color: #0eb90e;
-    border-radius: 1rem;
+#container {
+    position: absolute;
+    left: 0;
+    top: 0;
 }
