@@ -39,59 +39,68 @@ class Node extends Component {
     }
 }
 
+function Line(props) {
+    // convert node1 and node2 indices into boxes
+    const boxIndex1 = props.boxes.findIndex((box) => box.id == props.nodeId1)
+    const boxIndex2 = props.boxes.findIndex((box) => box.id == props.nodeId2)
+
+    let x1 = props.boxes[boxIndex1].x
+    let x2 = props.boxes[boxIndex2].x
+    let y1 = props.boxes[boxIndex1].y
+    let y2 = props.boxes[boxIndex2].y
+
+    const lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+    // how do I convert coordinates to an angle of rotation?
+    // find the gradient and then convert the gradient to an angle
+    const gradient = (y2 - y1) / (x2 - x1)
+    // use inverse tan to convert gradient (eg. 1.5) into degrees:
+    const rotateAngle = (Math.atan(gradient) / Math.PI) * 180
+    const lineStyle = {
+        position: "relative",
+        left: `${x1}px`,
+        top: `${y1}px`,
+        transform: `rotate(${rotateAngle}deg)`,
+        height: "1rem",
+        width: `${lineLength}px`,
+        backgroundColor: "black"
+    }
+    console.log(gradient, rotateAngle)
+    return (
+        <div style={lineStyle}></div>
+    )
+}
+
 class Graph extends Component {
     constructor(props) {
         super(props)
         this.state = {
             idCurrentlyMoving: null,
             boxes: [],
-            edgeList: []
+            edgeList: [],
+            lines: []
         }
-        this.canvasRef = React.createRef()
     }
     componentWillUnmount() {
         window.removeEventListener('mousedown', this.handleMouseDown);
         window.removeEventListener('mouseup', this.handleMouseUp);
     }
-    connectTwoNodes = (nodeId1, nodeId2) => {
-        // find the coordinates of node1 and node2
-        // use the indices to find the right box and then find the coordinates of these boxes
-        let index1 = this.state.boxes.findIndex((box) => box.id == nodeId1)
-        let index2 = this.state.boxes.findIndex((box) => box.id == nodeId2)
-        console.log("indices:", index1, index2)
-        let firstNodeCoords = [this.state.boxes[index1].x, this.state.boxes[index1].y]
-        let secondNodeCoords = [this.state.boxes[index2].x, this.state.boxes[index2].y]
-        // use these coordinates to draw a line between the nodes
-        // create a div line with coordinates at the first node
-        const canvas = this.canvasRef.current
-        var context = canvas.getContext("2d")
-        context.lineWidth = 3
-        context.shadowBlur = 1
-        context.strokeStyle = "red"
-        context.beginPath()
-        context.moveTo(200, 0)
-        context.lineTo(200, 300)
-        context.stroke()
-
-        /*
-        context.beginPath()
-        console.log("move to:", firstNodeCoords[0], firstNodeCoords[1])
-        context.moveTo(firstNodeCoords[0], firstNodeCoords[1])
-        console.log("line to:", secondNodeCoords[0], secondNodeCoords[1])
-        context.lineTo(secondNodeCoords[0], secondNodeCoords[1])
-        context.stroke()
-        */
-        console.log("line drawn")
-    }
-    drawLines = () => {
-        for(let i = 0; i < this.state.edgeList.length; i++) {
-            console.log("loop output:", this.state.edgeList[i])
-            this.connectTwoNodes(this.state.edgeList[i][0], this.state.edgeList[i][1])
-        }
-    }
     // when a node is clicked and added to the edge list, remove it after 3 seconds to reset edgeList
     cleanup = () => {
 
+    }
+    renderEdgeList = () => {
+        const newLines = this.state.edgeList.map((edge) =>
+            <Line
+                key={edge[0] + edge[1]}
+                nodeId1={edge[0]}
+                nodeId2={edge[1]}
+                boxes={this.state.boxes}
+            />
+        )
+        this.setState({
+            lines: newLines
+        })
+        console.log("lines:", newLines)
     }
     handleMouseDown = (event, id) => {
         // prepare for mouse move
@@ -136,11 +145,9 @@ class Graph extends Component {
                 this.setState({
                     edgeList: edgeListCopy
                 }, () => {
-                    // draw new lines for new graph connection
-                    console.log("state:", this.state.edgeList)
-                    this.drawLines()
+                    // re-render lines every time a new pair is added
+                    this.renderEdgeList()
                 })
-
             } else {
                 // otherwise, delete the element of length 1
                 this.setState(prevState => ({
@@ -173,6 +180,7 @@ class Graph extends Component {
     }
     handleMouseUp = (event, id) => {
         let index = this.state.boxes.findIndex((box) => box.id == id)
+
         console.log("edgeList:", this.state.edgeList)
         console.log("mouse up", index)
         window.removeEventListener('mousemove', this.handleMouseMove)
@@ -245,11 +253,23 @@ class Graph extends Component {
                     handleDeleteButtonClick={this.handleDeleteButtonClick}
                 />
             )
-        //console.log(this.state.boxes)
+        // convert edge list into a list of boxes
+        // [[0,1], [0,2], [1,2]]
+        // for each pair, get the coordinates of each number in the pair, then draw a div between the two coordinates
+        // for example, if the coordinates are [0,0] and [100,100], how would I draw a div between these two
+        // pairs of coordinates?
+
+
+
+        // 0. create a new div
+        // 1. use the first pair of coordinates to position the top left corner of the div at the start node.
+        // 2. then use the second pair of coordinates to find the gradient of the line.
+        // 3. then rotate the div so that it's gradient is correct
+        console.log("state lines", this.state.lines)
         return (
             <div id="container">
-                <canvas id="canvas" ref={this.canvasRef}>Your browser does not support canvas</canvas>
                 {boxes}
+                {this.state.lines}
                 <div id="button-container">
                     <button onClick={this.addBox} id="add-node-button">&#x2B;</button>
                 </div>
