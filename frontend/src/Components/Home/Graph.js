@@ -44,31 +44,42 @@ function Line(props) {
     const boxIndex1 = props.boxes.findIndex((box) => box.id == props.nodeId1)
     const boxIndex2 = props.boxes.findIndex((box) => box.id == props.nodeId2)
 
-    let x1 = props.boxes[boxIndex1].x
-    let x2 = props.boxes[boxIndex2].x
-    let y1 = props.boxes[boxIndex1].y
-    let y2 = props.boxes[boxIndex2].y
+    const x1 = props.boxes[boxIndex1].x
+    const x2 = props.boxes[boxIndex2].x
+    const y1 = props.boxes[boxIndex1].y
+    const y2 = props.boxes[boxIndex2].y
 
+    if(x1 + y1 <= x2 + y2) {
+        var startX = x1
+        var startY = y1
+    } else {
+        var startX = x2
+        var startY = y2
+    }
     const lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
     // how do I convert coordinates to an angle of rotation?
     // find the gradient and then convert the gradient to an angle
     const gradient = (y2 - y1) / (x2 - x1)
+    console.log("gradient:", gradient)
     // use inverse tan to convert gradient (eg. 1.5) into degrees:
     const rotateAngle = (Math.atan(gradient) / Math.PI) * 180
+
+    console.log("rotateAngle:", rotateAngle)
     const lineStyle = {
-        position: "relative",
-        left: `${x1}px`,
-        top: `${y1}px`,
-        transform: `rotate(${rotateAngle}deg)`,
+        position: "absolute",
+        transformOrigin: "0% 0%",
+        transform: `translate(${startX + 76}px, ${startY - 15}px) rotate(${rotateAngle}deg)`,
         height: "1rem",
         width: `${lineLength}px`,
         backgroundColor: "black"
     }
-    console.log(gradient, rotateAngle)
+    console.log(startX, startY, x1, y1)
     return (
         <div style={lineStyle}></div>
     )
 }
+
+// transform: `rotate(${rotateAngle}deg)`,
 
 class Graph extends Component {
     constructor(props) {
@@ -105,7 +116,6 @@ class Graph extends Component {
     handleMouseDown = (event, id) => {
         // prepare for mouse move
         let index = this.state.boxes.findIndex((box) => box.id == id)
-        console.log("mouse down", index)
 
         window.addEventListener('mousemove', this.handleMouseMove);
         let node = event.target
@@ -144,9 +154,6 @@ class Graph extends Component {
                 console.log("adding second node", edgeListCopy)
                 this.setState({
                     edgeList: edgeListCopy
-                }, () => {
-                    // re-render lines every time a new pair is added
-                    this.renderEdgeList()
                 })
             } else {
                 // otherwise, delete the element of length 1
@@ -158,10 +165,6 @@ class Graph extends Component {
         console.log("boxes:", this.state.boxes, "edgeList:", this.state.edgeList)
     }
     handleMouseMove = (event) => {
-        console.log("move")
-        console.log("edgeList:", this.state.edgeList)
-        console.log("edgeListLength:", this.state.edgeList.length)
-
         // check edge list for a single node and delete it if there is one
         let edgeListLength = this.state.edgeList.length
         if(edgeListLength > 0 && this.state.edgeList[edgeListLength - 1].length < 2) {
@@ -209,8 +212,6 @@ class Graph extends Component {
             name: "",
             x: newBoxCoordinates[0],
             y: newBoxCoordinates[1],
-            initialX: 0,
-            initialY: 0,
             shiftX: 0,
             shiftY: 0,
             isDragging: false
@@ -253,6 +254,26 @@ class Graph extends Component {
                     handleDeleteButtonClick={this.handleDeleteButtonClick}
                 />
             )
+        var renderEdgeList = true
+        for(let i = 0; i < this.state.edgeList.length; i++) {
+            if(this.state.edgeList[i].length < 2) {
+                renderEdgeList = false
+            }
+        }
+        if(renderEdgeList) {
+            // only render if edgeList has all pairs
+            // [[1,2], [1]]
+            // [[1,2], [1,3]]
+            var lines = this.state.edgeList.map((edge) =>
+                <Line
+                    key={edge[0] + edge[1]}
+                    nodeId1={edge[0]}
+                    nodeId2={edge[1]}
+                    boxes={this.state.boxes}
+                />
+            )
+        }
+
         // convert edge list into a list of boxes
         // [[0,1], [0,2], [1,2]]
         // for each pair, get the coordinates of each number in the pair, then draw a div between the two coordinates
@@ -269,7 +290,7 @@ class Graph extends Component {
         return (
             <div id="container">
                 {boxes}
-                {this.state.lines}
+                {lines}
                 <div id="button-container">
                     <button onClick={this.addBox} id="add-node-button">&#x2B;</button>
                 </div>
